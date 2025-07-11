@@ -5,52 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bunker Clicker</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
     body {
-      background-color: #1e1e1e;
+      background: linear-gradient(to bottom, #1e1e1e, #111);
+      font-family: 'Press Start 2P', monospace;
       color: #f0f0f0;
-      font-family: 'Segoe UI', sans-serif;
       text-align: center;
-      padding: 30px;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
     }
+
     h1 {
-      margin-bottom: 40px;
+      color: #f9ca24;
+      font-size: 1.2rem;
+      margin-bottom: 30px;
     }
+
     #counter {
-      font-size: 2.5rem;
-      margin: 20px 0;
+      font-size: 2rem;
+      margin: 20px;
+      color: #00cec9;
     }
-    button {
-      background-color: #00b894;
+
+    #tapBtn {
+      background: #0984e3;
       border: none;
       color: white;
       padding: 20px 40px;
-      font-size: 1.5rem;
+      font-size: 1rem;
       border-radius: 12px;
       cursor: pointer;
-      transition: background-color 0.2s;
+      box-shadow: 0 4px #074a74;
+      transition: all 0.1s ease-in-out;
     }
-    button:hover {
-      background-color: #019875;
+
+    #tapBtn:active {
+      transform: translateY(4px);
+      box-shadow: 0 0 #074a74;
+    }
+
+    .bunker-img {
+      width: 200px;
+      margin-top: 30px;
+      image-rendering: pixelated;
     }
   </style>
 </head>
 <body>
-  <h1>Экономика Бункера</h1>
-  <div id="counter">\u041a\u0430\u043f\u0441\u044b: 0</div>
-  <button id="tapBtn">\u041a\u043b\u0438\u043a\u043d\u0443\u0442\u044c</button>
+  <h1>💣 BUNKER CLICKER 💣</h1>
+  <div id="counter">Капсы: 0</div>
+  <button id="tapBtn">💥 КЛИК 💥</button>
+  <img src="https://i.ibb.co/gJ2x2R1/bunker-pixel.png" alt="bunker" class="bunker-img">
 
   <script>
-    const tg = window.Telegram.WebApp;
-    tg.expand();
+    const tg = window.Telegram?.WebApp;
+    if (tg) tg.expand();
 
-    let count = 0;
+    let count = localStorage.getItem("caps") || 0;
     const counter = document.getElementById("counter");
     const tapBtn = document.getElementById("tapBtn");
 
+    function updateCounter() {
+      counter.textContent = `Капсы: ${count}`;
+    }
+
     tapBtn.addEventListener("click", () => {
       count++;
-      counter.textContent = `\u041a\u0430\u043f\u0441\u044b: ${count}`;
+      localStorage.setItem("caps", count);
+      updateCounter();
     });
+
+    updateCounter();
   </script>
 </body>
 </html>
