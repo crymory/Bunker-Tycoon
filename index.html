@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bunker Clicker</title>
+  <style>
+    body {
+      background-color: #1e1e1e;
+      color: #f0f0f0;
+      font-family: 'Segoe UI', sans-serif;
+      text-align: center;
+      padding: 30px;
+    }
+    h1 {
+      margin-bottom: 40px;
+    }
+    #counter {
+      font-size: 2.5rem;
+      margin: 20px 0;
+    }
+    button {
+      background-color: #00b894;
+      border: none;
+      color: white;
+      padding: 20px 40px;
+      font-size: 1.5rem;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    button:hover {
+      background-color: #019875;
+    }
+  </style>
+</head>
+<body>
+  <h1>Экономика Бункера</h1>
+  <div id="counter">\u041a\u0430\u043f\u0441\u044b: 0</div>
+  <button id="tapBtn">\u041a\u043b\u0438\u043a\u043d\u0443\u0442\u044c</button>
+
+  <script>
+    const tg = window.Telegram.WebApp;
+    tg.expand();
+
+    let count = 0;
+    const counter = document.getElementById("counter");
+    const tapBtn = document.getElementById("tapBtn");
+
+    tapBtn.addEventListener("click", () => {
+      count++;
+      counter.textContent = `\u041a\u0430\u043f\u0441\u044b: ${count}`;
+    });
+  </script>
+</body>
+</html>
