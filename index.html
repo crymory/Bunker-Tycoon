@@ -55,38 +55,100 @@
       width: 180px;
       margin-top: 30px;
     }
+
+    #shop {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .upgrade-btn {
+      background: #2d98da;
+      padding: 12px 20px;
+      border-radius: 12px;
+      color: #fff;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .upgrade-btn:hover {
+      background: #2276b4;
+    }
   </style>
 </head>
 <body>
   <h1>BUNKER CLICKER</h1>
   <div id="counter">Капсы: 0</div>
   <button id="tapBtn">💥 КЛИК 💥</button>
+
+  <div id="shop">
+    <button class="upgrade-btn" id="upgradeClick">Улучшить клик (x2) – 100 капс</button>
+    <button class="upgrade-btn" id="autoClicker">Купить автокликер (1 капса / 2с) – 250 капс</button>
+  </div>
+
   <img src="https://i.ibb.co/gJ2x2R1/bunker-pixel.png" alt="bunker" class="bunker-img">
 
   <script>
     const tg = window.Telegram?.WebApp;
-    if (tg) {
-      tg.expand();
-    }
+    if (tg) tg.expand();
 
     let count = parseInt(localStorage.getItem("caps")) || 0;
+    let clickValue = parseInt(localStorage.getItem("clickValue")) || 1;
+    let autoClickerOwned = localStorage.getItem("autoClicker") === 'true';
+
     const counter = document.getElementById("counter");
     const tapBtn = document.getElementById("tapBtn");
+    const upgradeClick = document.getElementById("upgradeClick");
+    const autoClicker = document.getElementById("autoClicker");
 
     function updateCounter() {
       counter.textContent = `Капсы: ${count.toLocaleString('ru-RU')}`;
     }
 
     tapBtn.addEventListener("click", () => {
-      count++;
+      count += clickValue;
       localStorage.setItem("caps", count);
       updateCounter();
-      animateTap();
+      animateTap(`+${clickValue}`);
     });
 
-    function animateTap() {
+    upgradeClick.addEventListener("click", () => {
+      if (count >= 100) {
+        count -= 100;
+        clickValue *= 2;
+        localStorage.setItem("caps", count);
+        localStorage.setItem("clickValue", clickValue);
+        updateCounter();
+        upgradeClick.disabled = true;
+        upgradeClick.textContent = "✅ Клик улучшен (x2)";
+      } else {
+        alert("Недостаточно капс!");
+      }
+    });
+
+    autoClicker.addEventListener("click", () => {
+      if (count >= 250 && !autoClickerOwned) {
+        count -= 250;
+        autoClickerOwned = true;
+        localStorage.setItem("caps", count);
+        localStorage.setItem("autoClicker", 'true');
+        updateCounter();
+        autoClicker.disabled = true;
+        autoClicker.textContent = "✅ Автокликер активен";
+        startAutoClick();
+      } else if (autoClickerOwned) {
+        alert("Автокликер уже куплен");
+      } else {
+        alert("Недостаточно капс!");
+      }
+    });
+
+    function animateTap(text) {
       const anim = document.createElement("div");
-      anim.textContent = "+1";
+      anim.textContent = text;
       anim.style.position = "absolute";
       anim.style.top = `${tapBtn.offsetTop - 20}px`;
       anim.style.left = `${tapBtn.offsetLeft + tapBtn.offsetWidth / 2 - 10}px`;
@@ -104,7 +166,25 @@
       setTimeout(() => document.body.removeChild(anim), 700);
     }
 
+    function startAutoClick() {
+      setInterval(() => {
+        count++;
+        localStorage.setItem("caps", count);
+        updateCounter();
+      }, 2000);
+    }
+
+    // Инициализация
     updateCounter();
+    if (clickValue > 1) {
+      upgradeClick.disabled = true;
+      upgradeClick.textContent = "✅ Клик улучшен (x2)";
+    }
+    if (autoClickerOwned) {
+      autoClicker.disabled = true;
+      autoClicker.textContent = "✅ Автокликер активен";
+      startAutoClick();
+    }
   </script>
 </body>
 </html>
