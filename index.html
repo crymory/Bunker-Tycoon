@@ -5,12 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bunker Clicker</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
-
     body {
-      background: linear-gradient(to bottom, #1e1e1e, #111);
-      font-family: 'Press Start 2P', monospace;
-      color: #f0f0f0;
+      background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      color: #ffffff;
       text-align: center;
       margin: 0;
       padding: 0;
@@ -19,67 +17,92 @@
       align-items: center;
       justify-content: center;
       height: 100vh;
+      overflow: hidden;
+      user-select: none;
     }
 
     h1 {
-      color: #f9ca24;
-      font-size: 1.2rem;
-      margin-bottom: 30px;
+      font-size: 2rem;
+      margin-bottom: 20px;
+      font-weight: 600;
     }
 
     #counter {
-      font-size: 2rem;
-      margin: 20px;
-      color: #00cec9;
+      font-size: 2.5rem;
+      font-weight: bold;
+      margin: 20px 0;
+      color: #00e6a8;
     }
 
     #tapBtn {
-      background: #0984e3;
+      background: linear-gradient(145deg, #1abc9c, #16a085);
       border: none;
       color: white;
-      padding: 20px 40px;
-      font-size: 1rem;
-      border-radius: 12px;
+      padding: 20px 50px;
+      font-size: 1.2rem;
+      border-radius: 16px;
       cursor: pointer;
-      box-shadow: 0 4px #074a74;
-      transition: all 0.1s ease-in-out;
+      box-shadow: 0 6px 0 #117864;
+      transition: all 0.15s ease-in-out;
     }
 
     #tapBtn:active {
       transform: translateY(4px);
-      box-shadow: 0 0 #074a74;
+      box-shadow: 0 2px 0 #117864;
     }
 
     .bunker-img {
-      width: 200px;
+      width: 180px;
       margin-top: 30px;
-      image-rendering: pixelated;
     }
   </style>
 </head>
 <body>
-  <h1>💣 BUNKER CLICKER 💣</h1>
+  <h1>BUNKER CLICKER</h1>
   <div id="counter">Капсы: 0</div>
   <button id="tapBtn">💥 КЛИК 💥</button>
   <img src="https://i.ibb.co/gJ2x2R1/bunker-pixel.png" alt="bunker" class="bunker-img">
 
   <script>
     const tg = window.Telegram?.WebApp;
-    if (tg) tg.expand();
+    if (tg) {
+      tg.expand();
+    }
 
-    let count = localStorage.getItem("caps") || 0;
+    let count = parseInt(localStorage.getItem("caps")) || 0;
     const counter = document.getElementById("counter");
     const tapBtn = document.getElementById("tapBtn");
 
     function updateCounter() {
-      counter.textContent = `Капсы: ${count}`;
+      counter.textContent = `Капсы: ${count.toLocaleString('ru-RU')}`;
     }
 
     tapBtn.addEventListener("click", () => {
       count++;
       localStorage.setItem("caps", count);
       updateCounter();
+      animateTap();
     });
+
+    function animateTap() {
+      const anim = document.createElement("div");
+      anim.textContent = "+1";
+      anim.style.position = "absolute";
+      anim.style.top = `${tapBtn.offsetTop - 20}px`;
+      anim.style.left = `${tapBtn.offsetLeft + tapBtn.offsetWidth / 2 - 10}px`;
+      anim.style.color = "#00e6a8";
+      anim.style.fontSize = "1.2rem";
+      anim.style.opacity = 1;
+      anim.style.transition = "all 0.7s ease-out";
+      document.body.appendChild(anim);
+
+      requestAnimationFrame(() => {
+        anim.style.transform = "translateY(-40px)";
+        anim.style.opacity = 0;
+      });
+
+      setTimeout(() => document.body.removeChild(anim), 700);
+    }
 
     updateCounter();
   </script>
